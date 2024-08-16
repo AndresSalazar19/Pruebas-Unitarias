@@ -1,78 +1,78 @@
 package modelo;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class EmployeeTest {
     @Test
-    void testCsWorkerUSD() {
+    public void testCsWorkerUSD() {
         Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Worker);
         float result = employee.cs();
         // Verifica si el resultado es correcto
-        assertEquals(1000.0f, result, "The salary for Worker in USD should be equal to the salary.");
+        assertEquals(1000.0f, result, 0.01f); // Added delta of 0.01f
     }
 
     @Test
-    void testCsWorkerNonUSD() {
+    public void testCsWorkerNonUSD() {
         Employee employee = new Employee(1000.0f, "EUR", 0.1f, EmployeeType.Worker);
         float result = employee.cs();
         // Verifica si el resultado es correcto
-        assertEquals(950.0f, result, "The salary for Worker in non-USD should be reduced by 5%.");
+        assertEquals(950.0f, result, 0.01f); // Added delta of 0.01f
     }
 
     @Test
-    void testCsSupervisorUSD() {
+    public void testCsSupervisorUSD() {
         Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Supervisor);
         float result = employee.cs();
         // Verifica si el resultado es correcto
-        assertEquals(1035.0f, result, "The salary plus bonus for Supervisor in USD should be correct.");
+        assertEquals(1035.0f, result, 0.01f); // Added delta of 0.01f
     }
 
     @Test
-    void testCsSupervisorNonUSD() {
+    public void testCsSupervisorNonUSD() {
         Employee employee = new Employee(1000.0f, "EUR", 0.1f, EmployeeType.Supervisor);
         float result = employee.cs();
         // Verifica si el resultado es correcto
-        assertEquals(982.5f, result, "The salary plus bonus for Supervisor in non-USD should be correct.");
+        assertEquals(982.5f, result, 0.01f); // Added delta of 0.01f
     }
 
     @Test
-    void testCsManagerUSD() {
+    public void testCsManagerUSD() {
         Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Manager);
         float result = employee.cs();
         // Verifica si el resultado es correcto
-        assertEquals(1070.0f, result, "The salary plus bonus for Manager in USD should be correct.");
+        assertEquals(1070.0f, result, 0.01f); // Added delta of 0.01f
     }
 
     @Test
-    void testCsManagerNonUSD() {
+    public void testCsManagerNonUSD() {
         Employee employee = new Employee(1000.0f, "EUR", 0.1f, EmployeeType.Manager);
         float result = employee.cs();
         // Verifica si el resultado es correcto
-        assertEquals(975.0f, result, "The salary plus bonus for Manager in non-USD should be correct.");
+        assertEquals(975.0f, result, 0.01f); // Added delta of 0.01f
     }
 
     @Test
-    void testCalculateYearBonusWorker() {
+    public void testCalculateYearBonusWorker() {
         Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Worker);
         float result = employee.CalculateYearBonus();
         // Verifica si el resultado es correcto
-        assertEquals(386.0f, result, "The year bonus for Worker should be equal to RMU.");
+        assertEquals(386.0f, result, 0.01f); // Added delta of 0.01f
     }
 
     @Test
-    void testCalculateYearBonusSupervisor() {
+    public void testCalculateYearBonusSupervisor() {
         Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Supervisor);
         float result = employee.CalculateYearBonus();
         // Verifica si el resultado es correcto
-        assertEquals(1436.0f, result, "The year bonus for Supervisor should include salary and RMU * 0.5.");
+        assertEquals(1436.0f, result, 0.01f); // Added delta of 0.01f
     }
 
     @Test
-    void testCalculateYearBonusManager() {
+    public void testCalculateYearBonusManager() {
         Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Manager);
         float result = employee.CalculateYearBonus();
         // Verifica si el resultado es correcto
-        assertEquals(1772.0f, result, "The year bonus for Manager should include salary and RMU * 1.0.");
+        assertEquals(1772.0f, result, 0.01f); // Added delta of 0.01f
     }
 }
