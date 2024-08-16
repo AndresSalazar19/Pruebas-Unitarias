@@ -1,78 +1,142 @@
 package modelo;
 
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDate;
 
 public class EmployeeTest {
-    @Test
-    void testCsWorkerUSD() {
-        Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Worker);
-        float result = employee.cs();
-        // Verifica si el resultado es correcto
-        assertEquals(1000.0f, result, "The salary for Worker in USD should be equal to the salary.");
+
+    private static final float DELTA = 1e-2F;
+    private Employee workerUSD;
+    private Employee supervisorUSD;
+    private Employee managerUSD;
+    private Employee workerOtherCurrency;
+    private Employee supervisorOtherCurrency;
+    private Employee managerOtherCurrency;
+
+    @Before
+    public void setUp() {
+        workerUSD = new Employee(1000, "USD", 0.1F, EmployeeType.Worker);
+        supervisorUSD = new Employee(1000, "USD", 0.2F, EmployeeType.Supervisor);
+        managerUSD = new Employee(1000, "USD", 0.3F, EmployeeType.Manager);
+
+        workerOtherCurrency = new Employee(1000, "EUR", 0.1F, EmployeeType.Worker);
+        supervisorOtherCurrency = new Employee(1000, "EUR", 0.2F, EmployeeType.Supervisor);
+        managerOtherCurrency = new Employee(1000, "EUR", 0.3F, EmployeeType.Manager);
     }
 
     @Test
-    void testCsWorkerNonUSD() {
-        Employee employee = new Employee(1000.0f, "EUR", 0.1f, EmployeeType.Worker);
-        float result = employee.cs();
-        // Verifica si el resultado es correcto
-        assertEquals(950.0f, result, "The salary for Worker in non-USD should be reduced by 5%.");
+    public void testCsWorkerUSDMonthOdd() {
+        assumeTrue(isMonthOdd()); // Assume current month is odd
+        assertEquals(1000 + 386.0F / 12 * 2, workerUSD.cs(), DELTA);
     }
 
     @Test
-    void testCsSupervisorUSD() {
-        Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Supervisor);
-        float result = employee.cs();
-        // Verifica si el resultado es correcto
-        assertEquals(1035.0f, result, "The salary plus bonus for Supervisor in USD should be correct.");
+    public void testCsWorkerUSDMonthEven() {
+        assumeTrue(isMonthEven()); // Assume current month is even
+        assertEquals(1000, workerUSD.cs(), DELTA);
     }
 
     @Test
-    void testCsSupervisorNonUSD() {
-        Employee employee = new Employee(1000.0f, "EUR", 0.1f, EmployeeType.Supervisor);
-        float result = employee.cs();
-        // Verifica si el resultado es correcto
-        assertEquals(982.5f, result, "The salary plus bonus for Supervisor in non-USD should be correct.");
+    public void testCsSupervisorUSDMonthOdd() {
+        assumeTrue(isMonthOdd()); // Assume current month is odd
+        assertEquals(1000 + 0.35F * 1000 + 386.0F / 12 * 2, supervisorUSD.cs(), DELTA);
     }
 
     @Test
-    void testCsManagerUSD() {
-        Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Manager);
-        float result = employee.cs();
-        // Verifica si el resultado es correcto
-        assertEquals(1070.0f, result, "The salary plus bonus for Manager in USD should be correct.");
+    public void testCsSupervisorUSDMonthEven() {
+        assumeTrue(isMonthEven()); // Assume current month is even
+        assertEquals(1000 + 0.35F * 1000, supervisorUSD.cs(), DELTA);
     }
 
     @Test
-    void testCsManagerNonUSD() {
-        Employee employee = new Employee(1000.0f, "EUR", 0.1f, EmployeeType.Manager);
-        float result = employee.cs();
-        // Verifica si el resultado es correcto
-        assertEquals(975.0f, result, "The salary plus bonus for Manager in non-USD should be correct.");
+    public void testCsManagerUSDMonthOdd() {
+        assumeTrue(isMonthOdd()); // Assume current month is odd
+        assertEquals(1000 + 0.7F * 1000 + 386.0F / 12 * 2, managerUSD.cs(), DELTA);
     }
 
     @Test
-    void testCalculateYearBonusWorker() {
-        Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Worker);
-        float result = employee.CalculateYearBonus();
-        // Verifica si el resultado es correcto
-        assertEquals(386.0f, result, "The year bonus for Worker should be equal to RMU.");
+    public void testCsManagerUSDMonthEven() {
+        assumeTrue(isMonthEven()); // Assume current month is even
+        assertEquals(1000 + 0.7F * 1000, managerUSD.cs(), DELTA);
     }
 
     @Test
-    void testCalculateYearBonusSupervisor() {
-        Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Supervisor);
-        float result = employee.CalculateYearBonus();
-        // Verifica si el resultado es correcto
-        assertEquals(1436.0f, result, "The year bonus for Supervisor should include salary and RMU * 0.5.");
+    public void testCsWorkerOtherCurrencyMonthOdd() {
+        assumeTrue(isMonthOdd()); // Assume current month is odd
+        assertEquals(1000 * 0.95F + 386.0F / 12 * 2, workerOtherCurrency.cs(), DELTA);
     }
 
     @Test
-    void testCalculateYearBonusManager() {
-        Employee employee = new Employee(1000.0f, "USD", 0.1f, EmployeeType.Manager);
-        float result = employee.CalculateYearBonus();
-        // Verifica si el resultado es correcto
-        assertEquals(1772.0f, result, "The year bonus for Manager should include salary and RMU * 1.0.");
+    public void testCsWorkerOtherCurrencyMonthEven() {
+        assumeTrue(isMonthEven()); // Assume current month is even
+        assertEquals(1000 * 0.95F, workerOtherCurrency.cs(), DELTA);
+    }
+
+    @Test
+    public void testCsSupervisorOtherCurrencyMonthOdd() {
+        assumeTrue(isMonthOdd()); // Assume current month is odd
+        assertEquals(1000 * 0.95F + (0.2F * 0.35F) + 386.0F / 12 * 2, supervisorOtherCurrency.cs(), DELTA);
+    }
+
+    @Test
+    public void testCsSupervisorOtherCurrencyMonthEven() {
+        assumeTrue(isMonthEven()); // Assume current month is even
+        assertEquals(1000 * 0.95F + (0.2F * 0.35F), supervisorOtherCurrency.cs(), DELTA);
+    }
+
+    @Test
+    public void testCsManagerOtherCurrencyMonthOdd() {
+        assumeTrue(isMonthOdd()); // Assume current month is odd
+        assertEquals(1000 * 0.95F + (0.3F * 0.7F) + 386.0F / 12 * 2, managerOtherCurrency.cs(), DELTA);
+    }
+
+    @Test
+    public void testCsManagerOtherCurrencyMonthEven() {
+        assumeTrue(isMonthEven()); // Assume current month is even
+        assertEquals(1000 * 0.95F + (0.3F * 0.7F), managerOtherCurrency.cs(), DELTA);
+    }
+
+    @Test
+    public void testCalculateYearBonusWorkerUSD() {
+        assertEquals(386.0F, workerUSD.CalculateYearBonus(), DELTA);
+    }
+
+    @Test
+    public void testCalculateYearBonusSupervisorUSD() {
+        assertEquals(1000 + 386.0F * 0.5F, supervisorUSD.CalculateYearBonus(), DELTA);
+    }
+
+    @Test
+    public void testCalculateYearBonusManagerUSD() {
+        assertEquals(1000 + 386.0F * 1.0F, managerUSD.CalculateYearBonus(), DELTA);
+    }
+
+    @Test
+    public void testCalculateYearBonusWorkerOtherCurrency() {
+        assertEquals(386.0F, workerOtherCurrency.CalculateYearBonus(), DELTA);
+    }
+
+    @Test
+    public void testCalculateYearBonusSupervisorOtherCurrency() {
+        assertEquals(1000 * 0.95F + 386.0F * 0.5F, supervisorOtherCurrency.CalculateYearBonus(), DELTA);
+    }
+
+    @Test
+    public void testCalculateYearBonusManagerOtherCurrency() {
+        assertEquals(1000 * 0.95F + 386.0F * 1.0F, managerOtherCurrency.CalculateYearBonus(), DELTA);
+    }
+
+    // Helper methods to determine month parity
+    private boolean isMonthOdd() {
+        return LocalDate.now().getMonthValue() % 2 != 0;
+    }
+
+    private boolean isMonthEven() {
+        return LocalDate.now().getMonthValue() % 2 == 0;
     }
 }
