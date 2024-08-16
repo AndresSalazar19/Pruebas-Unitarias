@@ -1,4 +1,4 @@
-package modulo;
+package modelo;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;

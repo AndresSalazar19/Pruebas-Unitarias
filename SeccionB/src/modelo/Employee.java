@@ -1,4 +1,4 @@
-package tallerpruebas;
+package modelo;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
